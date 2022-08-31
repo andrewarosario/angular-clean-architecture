@@ -1,18 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { IMotoristaController } from 'src/app/domain/interfaces/controllers/imotorista-controller';
-import { IMotoristaUsecase } from 'src/app/domain/interfaces/usecases/imotorista-usecase';
-import { DriverEntity } from '../../../domain/entities/driver-entity';
-
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { IMotoristaController } from "src/app/domain/interfaces/controllers/imotorista-controller";
+import { IMotoristaQuery } from "src/app/domain/interfaces/query/imotorista.query";
+import { MotoristaState } from "src/app/domain/interfaces/store/imotorista.store";
+import { IMotoristaUsecase } from "src/app/domain/interfaces/usecases/imotorista-usecase";
+import { DriverEntity } from "../../../domain/entities/driver-entity";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class MotoristaControllerService implements IMotoristaController {
-
+  driver$: Observable<MotoristaState>;
   constructor(
-    private motoristaUsecase: IMotoristaUsecase
-  ) { }
+    private motoristaUsecase: IMotoristaUsecase,
+    private motoristaQuery: IMotoristaQuery
+  ) {
+    this.driver$ = this.motoristaQuery.driver$;
+  }
 
   get(id?: number): Observable<DriverEntity> {
     if (id) {
@@ -30,5 +34,4 @@ export class MotoristaControllerService implements IMotoristaController {
   disableEnable(id: number, status: boolean): Observable<DriverEntity> {
     return this.motoristaUsecase.disableEnable(id, status);
   }
-
 }
